@@ -1,3 +1,4 @@
 remove . in first page 
 upload logo
 tarikh shamsi to blog
+problem with save message not fading

@@ -25,7 +25,7 @@ export default function Home() {
   const textFour = useRef();
   const [mounted, setMounted] = useState(false);
   const { theme } = useTheme();
-  
+
   // When mounted on client, now we can show the UI
   useEffect(() => {
     setMounted(true);
@@ -50,7 +50,13 @@ export default function Home() {
 
   useIsomorphicLayoutEffect(() => {
     // Only run animation when mounted and all refs are available
-    if (mounted && textOne.current && textTwo.current && textThree.current && textFour.current) {
+    if (
+      mounted &&
+      textOne.current &&
+      textTwo.current &&
+      textThree.current &&
+      textFour.current
+    ) {
       stagger(
         [textOne.current, textTwo.current, textThree.current, textFour.current],
         { y: 40, x: -10, transform: "scale(0.95) skew(10deg)" },
@@ -61,12 +67,18 @@ export default function Home() {
 
   // Prevent theme flash on load
   if (!mounted) return null;
-  
+
   // Check if user is authenticated
-  const isAuthenticated = typeof window !== 'undefined' ? sessionStorage.getItem("isAuthenticated") : false;
-  
+  const isAuthenticated =
+    typeof window !== "undefined"
+      ? sessionStorage.getItem("isAuthenticated")
+      : false;
+
   return (
-    <div className={`relative ${data.showCursor && "cursor-none"}`} style={{ direction: 'rtl' }}>
+    <div
+      className={`relative ${data.showCursor && "cursor-none"}`}
+      style={{ direction: "rtl" }}
+    >
       {data.showCursor && <Cursor />}
       <Head>
         <title>{data.name}</title>
@@ -84,29 +96,37 @@ export default function Home() {
           <div className="mt-5">
             <h1
               ref={textOne}
-              className={`text-3xl tablet:text-6xl laptop:text-6xl laptopl:text-8xl p-1 tablet:p-2 text-bold w-4/5 mob:w-full laptop:w-4/5 text-right ${theme === "dark" ? "text-white" : "text-gray-800"}`}
-              style={{ textAlign: 'right' }}
+              className={`text-3xl tablet:text-6xl laptop:text-6xl laptopl:text-8xl p-1 tablet:p-2 text-bold w-4/5 mob:w-full laptop:w-4/5 text-right ${
+                theme === "dark" ? "text-white" : "text-gray-800"
+              }`}
+              style={{ textAlign: "right" }}
             >
               {data.headerTaglineOne}
             </h1>
             <h1
               ref={textTwo}
-              className={`text-3xl tablet:text-6xl laptop:text-6xl laptopl:text-8xl p-1 tablet:p-2 text-bold w-full laptop:w-4/5 text-right ${theme === "dark" ? "text-white" : "text-gray-800"}`}
-              style={{ textAlign: 'right' }}
+              className={`text-3xl tablet:text-6xl laptop:text-6xl laptopl:text-8xl p-1 tablet:p-2 text-bold w-full laptop:w-4/5 text-right ${
+                theme === "dark" ? "text-white" : "text-gray-800"
+              }`}
+              style={{ textAlign: "right" }}
             >
               {data.headerTaglineTwo}
             </h1>
             <h1
               ref={textThree}
-              className={`text-3xl tablet:text-6xl laptop:text-6xl laptopl:text-8xl p-1 tablet:p-2 text-bold w-full laptop:w-4/5 text-right ${theme === "dark" ? "text-white" : "text-gray-800"}`}
-              style={{ textAlign: 'right' }}
+              className={`text-3xl tablet:text-6xl laptop:text-6xl laptopl:text-8xl p-1 tablet:p-2 text-bold w-full laptop:w-4/5 text-right ${
+                theme === "dark" ? "text-white" : "text-gray-800"
+              }`}
+              style={{ textAlign: "right" }}
             >
               {data.headerTaglineThree}
             </h1>
             <h1
               ref={textFour}
-              className={`text-3xl tablet:text-6xl laptop:text-6xl laptopl:text-8xl p-1 tablet:p-2 text-bold w-full laptop:w-4/5 text-right ${theme === "dark" ? "text-white" : "text-gray-800"}`}
-              style={{ textAlign: 'right' }}
+              className={`text-3xl tablet:text-6xl laptop:text-6xl laptopl:text-8xl p-1 tablet:p-2 text-bold w-full laptop:w-4/5 text-right ${
+                theme === "dark" ? "text-white" : "text-gray-800"
+              }`}
+              style={{ textAlign: "right" }}
             >
               {data.headerTaglineFour}
             </h1>
@@ -115,7 +135,13 @@ export default function Home() {
           <Socials className="mt-2 laptop:mt-5" />
         </div>
         <div className="mt-10 laptop:mt-30 p-2 laptop:p-0" ref={workRef}>
-          <h1 className={`text-2xl text-bold text-right ${theme === "dark" ? "text-white" : "text-gray-800"}`}>کارها.</h1>
+          <h1
+            className={`text-2xl text-bold text-right ${
+              theme === "dark" ? "text-white" : "text-gray-800"
+            }`}
+          >
+            نمونه کارها
+          </h1>
 
           <div className="mt-5 laptop:mt-10 grid grid-cols-1 tablet:grid-cols-2 gap-4">
             {data.projects.map((project) => (
@@ -131,7 +157,13 @@ export default function Home() {
         </div>
 
         <div className="mt-10 laptop:mt-30 p-2 laptop:p-0">
-          <h1 className={`tablet:m-10 text-2xl text-bold text-right ${theme === "dark" ? "text-white" : "text-gray-800"}`}>خدمات.</h1>
+          <h1
+            className={`tablet:m-10 text-2xl text-bold text-right ${
+              theme === "dark" ? "text-white" : "text-gray-800"
+            }`}
+          >
+            خدمات
+          </h1>
           <div className="mt-5 tablet:m-10 grid grid-cols-1 laptop:grid-cols-2 gap-6">
             {data.services.map((service, index) => (
               <ServiceCard
@@ -151,8 +183,19 @@ export default function Home() {
           </div>
         )}
         <div className="mt-10 laptop:mt-40 p-2 laptop:p-0" ref={aboutRef}>
-          <h1 className={`tablet:m-10 text-2xl text-bold text-right ${theme === "dark" ? "text-white" : "text-gray-800"}`}>درباره من.</h1>
-          <p className={`tablet:m-10 mt-2 text-xl laptop:text-3xl w-full laptop:w-3/5 text-right ${theme === "dark" ? "text-white" : "text-gray-800"}`} style={{ textAlign: 'right' }}>
+          <h1
+            className={`tablet:m-10 text-2xl text-bold text-right ${
+              theme === "dark" ? "text-white" : "text-gray-800"
+            }`}
+          >
+            درباره ما
+          </h1>
+          <p
+            className={`tablet:m-10 mt-2 text-xl laptop:text-3xl w-full laptop:w-3/5 text-right ${
+              theme === "dark" ? "text-white" : "text-gray-800"
+            }`}
+            style={{ textAlign: "right" }}
+          >
             {data.aboutpara}
           </p>
         </div>

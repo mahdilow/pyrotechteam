@@ -12,8 +12,11 @@ import Cursor from "../components/Cursor";
 const Edit = () => {
   // states
   const [data, setData] = useState(yourData);
+  const [originalData, setOriginalData] = useState(yourData);
   const [currentTabs, setCurrentTabs] = useState("HEADER");
   const [mounted, setMounted] = useState(false);
+  const [saveMessage, setSaveMessage] = useState("");
+  const [unsavedChanges, setUnsavedChanges] = useState(false);
   const { theme } = useTheme();
   const router = useRouter();
   
@@ -24,19 +27,65 @@ const Edit = () => {
     if (!isAuthenticated) {
       router.push("/login");
     }
+    
+    // Deep copy the original data for comparison
+    setOriginalData(JSON.parse(JSON.stringify(yourData)));
   }, [router]);
+  
+  // Check for unsaved changes
+  useEffect(() => {
+    if (JSON.stringify(data) !== JSON.stringify(originalData)) {
+      setUnsavedChanges(true);
+    } else {
+      setUnsavedChanges(false);
+    }
+  }, [data, originalData]);
 
   const saveData = () => {
     if (process.env.NODE_ENV === "development") {
+      setSaveMessage("در حال ذخیره تغییرات...");
+      
       fetch("/api/portfolio", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(data),
+      })
+      .then(response => {
+        if (response.ok) {
+          setSaveMessage("تغییرات با موفقیت ذخیره شد");
+          setOriginalData(JSON.parse(JSON.stringify(data)));
+          setUnsavedChanges(false);
+          
+          // Clear success message after 3 seconds
+          // Show success message for 3 seconds then fade away
+          setTimeout(() => {
+            setSaveMessage("");
+          }, 3000);
+        } else {
+          setSaveMessage("خطا در ذخیره تغییرات");
+        }
+      })
+      .catch(error => {
+        console.error("Error saving data:", error);
+        setSaveMessage("خطا در ذخیره تغییرات");
       });
     } else {
       alert("This thing only works in development mode.");
+    }
+  };
+  
+  const discardChanges = () => {
+    if (window.confirm("آیا مطمئن هستید که می‌خواهید تغییرات را لغو کنید؟")) {
+      setData(JSON.parse(JSON.stringify(originalData)));
+      setUnsavedChanges(false);
+      setSaveMessage("تغییرات لغو شد");
+      
+      // Clear message after 3 seconds
+      setTimeout(() => {
+        setSaveMessage("");
+      }, 3000);
     }
   };
 
@@ -170,19 +219,39 @@ const Edit = () => {
       <div className="mt-10">
         <div className={`${theme === "dark" ? "bg-gray-800" : "bg-white"} p-4 rounded-lg shadow-md`}>
           <div className="flex items-center justify-between">
-            <h1 className={`text-4xl ${theme === "dark" ? "text-white" : "text-gray-800"}`}>پنل مدیریت</h1>
-            <div className="flex items-center">
-              <Button 
-                onClick={() => {
-                  sessionStorage.removeItem("isAuthenticated");
-                  router.push("/");
-                }} 
-                classes="ml-2 bg-red-500 hover:bg-red-600 text-white">
-                خروج
-              </Button>
-              <Button onClick={saveData} type="primary">
-                ذخیره
-              </Button>
+            <div className="flex items-center justify-between w-full">
+              <h1 className={`text-4xl ${theme === "dark" ? "text-white" : "text-gray-800"}`}>پنل مدیریت</h1>
+              
+              {saveMessage && (
+                <div className={`mr-4 py-2 px-4 rounded-md transition-opacity duration-500 ${saveMessage.includes("خطا") ? "bg-red-100 text-red-800" : "bg-green-100 text-green-800"}`}>
+                  {saveMessage}
+                </div>
+              )}
+              
+              <div className="flex items-center">
+                {unsavedChanges && (
+                  <Button 
+                    onClick={discardChanges} 
+                    classes="ml-2 bg-gray-500 hover:bg-gray-600 text-white">
+                    لغو تغییرات
+                  </Button>
+                )}
+                <Button 
+                  onClick={() => {
+                    sessionStorage.removeItem("isAuthenticated");
+                    router.push("/");
+                  }} 
+                  classes="ml-2 bg-red-500 hover:bg-red-600 text-white">
+                  خروج
+                </Button>
+                <Button 
+                  onClick={saveData} 
+                  type="primary"
+                  disabled={!unsavedChanges}
+                  classes={!unsavedChanges ? "opacity-50 cursor-not-allowed" : ""}>
+                  ذخیره
+                </Button>
+              </div>
             </div>
           </div>
 
@@ -243,6 +312,50 @@ const Edit = () => {
                 type="text"
                 dir="rtl"
               ></input>
+            </div>
+            
+            <div className="mt-5">
+              <label className="text-lg opacity-70 block mb-2">لوگو</label>
+              <div className="flex items-start space-x-4 space-x-reverse">
+                <div className="flex-grow">
+                  <input
+                    value={data.logo}
+                    onChange={(e) => setData({ ...data, logo: e.target.value })}
+                    className={`w-full p-2 rounded-md shadow-lg border-2 ${theme === "dark" ? "bg-gray-700 border-gray-600 text-white" : "bg-white border-gray-300 text-gray-800"}`}
+                    type="text"
+                    dir="rtl"
+                    placeholder="آدرس URL تصویر لوگو یا کد base64"
+                  />
+                </div>
+                <label className="cursor-pointer px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition duration-200 mr-2">
+                  <span>آپلود فایل</span>
+                  <input 
+                    type="file" 
+                    className="hidden" 
+                    accept="image/*"
+                    onChange={(e) => {
+                      const file = e.target.files[0];
+                      if (file) {
+                        const reader = new FileReader();
+                        reader.onloadend = () => {
+                          setData({ ...data, logo: reader.result });
+                        };
+                        reader.readAsDataURL(file);
+                      }
+                    }} 
+                  />
+                </label>
+              </div>
+              {data.logo && (
+                <div className="mt-2">
+                  <p className={`${theme === "dark" ? "text-white" : "text-gray-800"} mb-2`}>پیش‌نمایش:</p>
+                  <img 
+                    src={data.logo} 
+                    alt="Logo Preview" 
+                    className="h-16 object-contain rounded-md" 
+                  />
+                </div>
+              )}
             </div>
             <div className="mt-5 flex items-center">
               <label className="w-1/5 text-lg opacity-70">
@@ -424,21 +537,57 @@ const Edit = () => {
                       type="text"
                     ></input>
                   </div>
-                  <div className="flex items-center mt-2">
-                    <label className="w-1/5 text-lg opacity-50">
+                  <div className="flex flex-col mt-2">
+                    <label className="text-lg opacity-50 mb-2">
                       Image Source
                     </label>
-                    <input
-                      value={project.imageSrc}
-                      onChange={(e) =>
-                        editProjects(index, {
-                          ...project,
-                          imageSrc: e.target.value,
-                        })
-                      }
-                      className="w-4/5 ml-10 p-2 rounded-md shadow-lg border-2"
-                      type="text"
-                    ></input>
+                    <div className="flex items-start space-x-4">
+                      <div className="flex-grow">
+                        <input
+                          value={project.imageSrc}
+                          onChange={(e) =>
+                            editProjects(index, {
+                              ...project,
+                              imageSrc: e.target.value,
+                            })
+                          }
+                          className="w-full p-2 rounded-md shadow-lg border-2"
+                          type="text"
+                          placeholder="آدرس URL تصویر یا کد base64"
+                        />
+                      </div>
+                      <label className="cursor-pointer px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition duration-200 ml-2">
+                        <span>آپلود فایل</span>
+                        <input 
+                          type="file" 
+                          className="hidden" 
+                          accept="image/*"
+                          onChange={(e) => {
+                            const file = e.target.files[0];
+                            if (file) {
+                              const reader = new FileReader();
+                              reader.onloadend = () => {
+                                editProjects(index, {
+                                  ...project,
+                                  imageSrc: reader.result,
+                                });
+                              };
+                              reader.readAsDataURL(file);
+                            }
+                          }} 
+                        />
+                      </label>
+                    </div>
+                    {project.imageSrc && (
+                      <div className="mt-2">
+                        <p className="mb-1">پیش‌نمایش:</p>
+                        <img 
+                          src={project.imageSrc} 
+                          alt={project.title} 
+                          className="h-24 object-cover rounded-md" 
+                        />
+                      </div>
+                    )}
                   </div>
                   <div className="flex items-center mt-2">
                     <label className="w-1/5 text-lg opacity-50">url</label>

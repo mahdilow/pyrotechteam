@@ -3,6 +3,7 @@ import { useTheme } from "next-themes";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import Button from "../Button";
+import Image from "next/image";
 // Local Data
 import data from "../../data/portfolio.json";
 
@@ -11,7 +12,7 @@ const Header = ({ handleWorkScroll, handleAboutScroll, isBlog }) => {
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
-  const { name, showBlog, showResume } = data;
+  const { name, logo, showBlog, showResume } = data;
 
   useEffect(() => {
     setMounted(true);
@@ -26,12 +27,16 @@ const Header = ({ handleWorkScroll, handleAboutScroll, isBlog }) => {
               className="flex items-center justify-between p-2 laptop:p-0"
               style={{ direction: "rtl" }}
             >
-              <h1
+              <div
                 onClick={() => router.push("/")}
-                className="font-medium p-2 laptop:p-0 link"
+                className="font-medium p-2 laptop:p-0 link flex items-center cursor-pointer"
               >
-                {name}.
-              </h1>
+                {logo ? (
+                  <img src={logo} alt={name} className="h-14 ml-2" />
+                ) : (
+                  <h1>{name}</h1>
+                )}
+              </div>
 
               <div className="flex items-center" style={{ direction: "rtl" }}>
                 {data.darkMode && (
@@ -72,10 +77,10 @@ const Header = ({ handleWorkScroll, handleAboutScroll, isBlog }) => {
             >
               {!isBlog ? (
                 <div className="grid grid-cols-1">
-                  <Button onClick={handleWorkScroll}>Work</Button>
-                  <Button onClick={handleAboutScroll}>About</Button>
+                  <Button onClick={handleWorkScroll}>کارها</Button>
+                  <Button onClick={handleAboutScroll}>درباره ما</Button>
                   {showBlog && (
-                    <Button onClick={() => router.push("/blog")}>Blog</Button>
+                    <Button onClick={() => router.push("/blog")}>بلاگ</Button>
                   )}
                   {showResume && (
                     <Button
@@ -83,30 +88,30 @@ const Header = ({ handleWorkScroll, handleAboutScroll, isBlog }) => {
                         window.open("mailto:pyrotech.dev@proton.me")
                       }
                     >
-                      Resume
+                      رزومه
                     </Button>
                   )}
 
                   <Button
                     onClick={() => window.open("mailto:pyrotech.dev@proton.me")}
                   >
-                    Contact
+                    تماس
                   </Button>
                 </div>
               ) : (
                 <div className="grid grid-cols-1">
                   <Button onClick={() => router.push("/")} classes="first:ml-1">
-                    Home
+                    خانه
                   </Button>
                   {showBlog && (
-                    <Button onClick={() => router.push("/blog")}>Blog</Button>
+                    <Button onClick={() => router.push("/blog")}>بلاگ</Button>
                   )}
                   {showResume && (
                     <Button
                       onClick={() => router.push("/resume")}
                       classes="first:ml-1"
                     >
-                      Resume
+                      رزومه
                     </Button>
                   )}
 
@@ -127,32 +132,36 @@ const Header = ({ handleWorkScroll, handleAboutScroll, isBlog }) => {
         } dark:text-white top-0 z-10 tablet:flex`}
         style={{ direction: "rtl" }}
       >
-        <h1
+        <div
           onClick={() => router.push("/")}
-          className="font-medium cursor-pointer mob:p-2 laptop:p-0"
+          className="font-medium cursor-pointer mob:p-2 laptop:p-0 flex items-center"
         >
-          {name}.
-        </h1>
+          {logo ? (
+            <img src={logo} alt={name} className="h-16 ml-2" />
+          ) : (
+            <h1>{name}</h1>
+          )}
+        </div>
         {!isBlog ? (
           <div className="flex" style={{ direction: "rtl" }}>
-            <Button onClick={handleWorkScroll}>Work</Button>
-            <Button onClick={handleAboutScroll}>About</Button>
+            <Button onClick={handleWorkScroll}>کارها</Button>
+            <Button onClick={handleAboutScroll}>درباره ما</Button>
             {showBlog && (
-              <Button onClick={() => router.push("/blog")}>Blog</Button>
+              <Button onClick={() => router.push("/blog")}>بلاگ</Button>
             )}
             {showResume && (
               <Button
                 onClick={() => router.push("/resume")}
                 classes="first:ml-1"
               >
-                Resume
+                رزومه
               </Button>
             )}
 
             <Button
               onClick={() => window.open("mailto:pyrotech.dev@proton.me")}
             >
-              Contact
+              تماس
             </Button>
             {mounted && theme && data.darkMode && (
               <Button
@@ -167,23 +176,23 @@ const Header = ({ handleWorkScroll, handleAboutScroll, isBlog }) => {
           </div>
         ) : (
           <div className="flex" style={{ direction: "rtl" }}>
-            <Button onClick={() => router.push("/")}>Home</Button>
+            <Button onClick={() => router.push("/")}>خانه</Button>
             {showBlog && (
-              <Button onClick={() => router.push("/blog")}>Blog</Button>
+              <Button onClick={() => router.push("/blog")}>بلاگ</Button>
             )}
             {showResume && (
               <Button
                 onClick={() => router.push("/resume")}
                 classes="first:ml-1"
               >
-                Resume
+                رزومه
               </Button>
             )}
 
             <Button
               onClick={() => window.open("mailto:pyrotech.dev@proton.me")}
             >
-              Contact
+              تماس
             </Button>
 
             {mounted && theme && data.darkMode && (
