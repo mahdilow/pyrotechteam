@@ -3,9 +3,9 @@ import { useRouter } from "next/router";
 import Cursor from "../components/Cursor";
 import Header from "../components/Header";
 import ProjectResume from "../components/ProjectResume";
-import Socials from "../components/Socials";
 import Button from "../components/Button";
 import { useTheme } from "next-themes";
+import Footer from "../components/Footer";
 // Data
 import { name, showResume } from "../data/portfolio.json";
 import { resume } from "../data/portfolio.json";
@@ -58,7 +58,7 @@ const Resume = () => {
                 {resume.description}
               </h2>
               <div className="mt-2">
-                <Socials />
+                {/* Social links are now only in the footer */}
               </div>
               <div className="mt-5">
                 <h1 className="text-2xl font-bold">Experience</h1>

@@ -3,7 +3,6 @@ import { useTheme } from "next-themes";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import Button from "../Button";
-import Image from "next/image";
 // Local Data
 import data from "../../data/portfolio.json";
 
@@ -12,7 +11,7 @@ const Header = ({ handleWorkScroll, handleAboutScroll, isBlog }) => {
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
-  const { name, logo, showBlog, showResume } = data;
+  const { name, showBlog, showResume } = data;
 
   useEffect(() => {
     setMounted(true);
@@ -31,11 +30,14 @@ const Header = ({ handleWorkScroll, handleAboutScroll, isBlog }) => {
                 onClick={() => router.push("/")}
                 className="font-medium p-2 laptop:p-0 link flex items-center cursor-pointer"
               >
-                {logo ? (
-                  <img src={logo} alt={name} className="h-14 ml-2" />
-                ) : (
-                  <h1>{name}</h1>
-                )}
+                <img
+                  src={`/images/logo-${
+                    theme === "dark" ? "dark" : "light"
+                  }.svg`}
+                  alt="Logo"
+                  className="h-14 ml-2"
+                />
+                <h1>{name}</h1>
               </div>
 
               <div className="flex items-center" style={{ direction: "rtl" }}>
@@ -136,11 +138,12 @@ const Header = ({ handleWorkScroll, handleAboutScroll, isBlog }) => {
           onClick={() => router.push("/")}
           className="font-medium cursor-pointer mob:p-2 laptop:p-0 flex items-center"
         >
-          {logo ? (
-            <img src={logo} alt={name} className="h-16 ml-2" />
-          ) : (
-            <h1>{name}</h1>
-          )}
+          <img
+            src={`/images/logo-${theme === "dark" ? "dark" : "light"}.svg`}
+            alt="Logo"
+            className="h-24  ml-2"
+          />
+          <h1>{name}</h1>
         </div>
         {!isBlog ? (
           <div className="flex" style={{ direction: "rtl" }}>
@@ -158,9 +161,7 @@ const Header = ({ handleWorkScroll, handleAboutScroll, isBlog }) => {
               </Button>
             )}
 
-            <Button
-              onClick={() => window.open("mailto:pyrotech.dev@proton.me")}
-            >
+            <Button onClick={() => window.open("tel:+989100711835")}>
               تماس
             </Button>
             {mounted && theme && data.darkMode && (

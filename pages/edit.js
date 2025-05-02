@@ -314,49 +314,7 @@ const Edit = () => {
               ></input>
             </div>
             
-            <div className="mt-5">
-              <label className="text-lg opacity-70 block mb-2">لوگو</label>
-              <div className="flex items-start space-x-4 space-x-reverse">
-                <div className="flex-grow">
-                  <input
-                    value={data.logo}
-                    onChange={(e) => setData({ ...data, logo: e.target.value })}
-                    className={`w-full p-2 rounded-md shadow-lg border-2 ${theme === "dark" ? "bg-gray-700 border-gray-600 text-white" : "bg-white border-gray-300 text-gray-800"}`}
-                    type="text"
-                    dir="rtl"
-                    placeholder="آدرس URL تصویر لوگو یا کد base64"
-                  />
-                </div>
-                <label className="cursor-pointer px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition duration-200 mr-2">
-                  <span>آپلود فایل</span>
-                  <input 
-                    type="file" 
-                    className="hidden" 
-                    accept="image/*"
-                    onChange={(e) => {
-                      const file = e.target.files[0];
-                      if (file) {
-                        const reader = new FileReader();
-                        reader.onloadend = () => {
-                          setData({ ...data, logo: reader.result });
-                        };
-                        reader.readAsDataURL(file);
-                      }
-                    }} 
-                  />
-                </label>
-              </div>
-              {data.logo && (
-                <div className="mt-2">
-                  <p className={`${theme === "dark" ? "text-white" : "text-gray-800"} mb-2`}>پیش‌نمایش:</p>
-                  <img 
-                    src={data.logo} 
-                    alt="Logo Preview" 
-                    className="h-16 object-contain rounded-md" 
-                  />
-                </div>
-              )}
-            </div>
+            {/* Logo upload removed since we're using static theme-based logos */}
             <div className="mt-5 flex items-center">
               <label className="w-1/5 text-lg opacity-70">
                 خط اول سربرگ
