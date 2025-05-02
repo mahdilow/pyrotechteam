@@ -6,32 +6,36 @@ import ProjectResume from "../components/ProjectResume";
 import Button from "../components/Button";
 import { useTheme } from "next-themes";
 import Footer from "../components/Footer";
-// Data
-import { name, showResume } from "../data/portfolio.json";
-import { resume } from "../data/portfolio.json";
+
+// Import the entire JSON and destructure later
 import data from "../data/portfolio.json";
 
 const Resume = () => {
   const router = useRouter();
   const theme = useTheme();
   const [mount, setMount] = useState(false);
-
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
     setMount(true);
-    if (!showResume) {
+    if (!data.showResume) {
       router.push("/");
     }
-    
+
     // Check if user is authenticated
-    const authStatus = typeof window !== 'undefined' ? sessionStorage.getItem("isAuthenticated") : false;
+    const authStatus =
+      typeof window !== "undefined"
+        ? sessionStorage.getItem("isAuthenticated")
+        : false;
     setIsAuthenticated(authStatus === "true");
   }, []);
+
+  const { name, resume } = data;
+
   return (
     <>
       {isAuthenticated && (
-        <div className="fixed bottom-6 left-6" style={{ direction: 'rtl' }}>
+        <div className="fixed bottom-6 left-6" style={{ direction: "rtl" }}>
           <Button onClick={() => router.push("/edit")} type={"primary"}>
             ویرایش رزومه
           </Button>
@@ -42,7 +46,7 @@ const Resume = () => {
         className={`container mx-auto mb-10 ${
           data.showCursor && "cursor-none"
         }`}
-        style={{ direction: 'rtl' }}
+        style={{ direction: "rtl" }}
       >
         <Header isBlog />
         {mount && (
@@ -57,12 +61,9 @@ const Resume = () => {
               <h2 className="w-4/5 text-xl mt-5 opacity-50">
                 {resume.description}
               </h2>
-              <div className="mt-2">
-                {/* Social links are now only in the footer */}
-              </div>
+
               <div className="mt-5">
                 <h1 className="text-2xl font-bold">Experience</h1>
-
                 {resume.experiences.map(
                   ({ id, dates, type, position, bullets }) => (
                     <ProjectResume
@@ -71,10 +72,11 @@ const Resume = () => {
                       type={type}
                       position={position}
                       bullets={bullets}
-                    ></ProjectResume>
+                    />
                   )
                 )}
               </div>
+
               <div className="mt-5">
                 <h1 className="text-2xl font-bold">Education</h1>
                 <div className="mt-2">
@@ -87,6 +89,7 @@ const Resume = () => {
                   </p>
                 </div>
               </div>
+
               <div className="mt-5">
                 <h1 className="text-2xl font-bold">Skills</h1>
                 <div className="flex mob:flex-col desktop:flex-row justify-between">
