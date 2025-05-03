@@ -2,3 +2,6 @@ remove . in first page
 upload logo
 tarikh shamsi to blog
 problem with save message not fading
+add upload icon for socials 
+opening site in new device for the first time and the font and logo are not the right color then when hitting the change theme button it gets fixed and the right colors apply it should be good even when new users open the site 
+use a data base 
