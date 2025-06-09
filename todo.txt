@@ -5,3 +5,6 @@ problem with save message not fading
 add upload icon for socials 
 opening site in new device for the first time and the font and logo are not the right color then when hitting the change theme button it gets fixed and the right colors apply it should be good even when new users open the site 
 use a data base 
+
+creeate branch for mahdiloravend.ir delete blog , .. (keep only resume and first page)  use github pags  (maybe github actions for automating the build proccess)
+        
